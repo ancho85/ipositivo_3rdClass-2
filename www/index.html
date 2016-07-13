@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+  <link rel="stylesheet" type="text/css" media="all" href="css/styles.css">
+  <script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="js/caman.full.min.js"></script>
+</head>
+
+<body>
+  <div id="topbar">
+  </div>
+  
+  <div id="w">
+    <div id="content">
+      <h1>Instagram-Style Photo Filters</h1>
+      
+      <nav id="buttons" class="centered">
+        <a href="#" id="resetbtn" class="btn">Reset Photo</a>
+        <a href="#" id="brightnessbtn" class="btn">Brightness</a>
+        <a href="#" id="noisebtn" class="btn">Noise</a>
+        <a href="#" id="sepiabtn" class="btn">Sepia</a>
+        <a href="#" id="contrastbtn" class="btn">Contrast</a>
+        <a href="#" id="colorbtn" class="btn">Add Blue</a>
+      </nav>
+             
+      <div class="centered"><canvas id="maincanvas"></canvas></div>
+    </div><!-- @end #content -->
+  </div><!-- @end #w -->
+<script type="text/javascript">
+var canvas = $('#maincanvas');
+var ctx    = canvas[0].getContext("2d");
+
+var $reset      = $('#resetbtn');
+var $brightness = $('#brightnessbtn');
+var $noise      = $('#noisebtn');
+var $sepia      = $('#sepiabtn');
+var $contrast   = $('#contrastbtn');
+var $color      = $('#colorbtn');
+
+// http://stackoverflow.com/a/6722031/477958
+$reset.on('click', function(e){
+  e.preventDefault();
+  var img = new Image();
+  img.src = "img/city.jpeg";
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+  ctx.restore();
+  ctx.drawImage(img, 0, 0);
+  Caman('#maincanvas', 'img/city.jpeg', function(){
+    this.revert(false);
+    this.render();
+  }); 
+});
+
+$brightness.on('click', function(e){
+  e.preventDefault();
+  Caman('#maincanvas', 'img/city.jpeg', function(){
+    this.brightness(10);
+    this.contrast(0);
+    this.render(function(){
+      // some callback function after rendering
+    });
+  });
+});
+
+$noise.on('click', function(e){
+  e.preventDefault();
+  Caman('#maincanvas', 'img/city.jpeg', function(){
+    this.noise(10);
+    this.render();
+  });
+});
+
+$contrast.on('click', function(e){
+  e.preventDefault();
+  Caman('#maincanvas', 'img/city.jpeg', function(){
+    this.contrast(10);
+    this.render();
+  });
+});
+
+$sepia.on('click', function(e){
+  e.preventDefault();
+  Caman('#maincanvas', 'img/city.jpeg', function(){
+    this.sepia(20);
+    this.render();
+  });
+});
+
+$color.on('click', function(e){
+  e.preventDefault();
+  Caman('#maincanvas', 'img/city.jpeg', function(){
+    this.colorize("#3c69da", 10);
+    // alternative syntax
+    // this.colorize(60, 105, 218, 10);
+    this.render();
+  });
+});
+</script>
+</body>
+</html>
